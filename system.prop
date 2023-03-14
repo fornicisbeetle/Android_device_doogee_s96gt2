@@ -1,0 +1,4 @@
+####################################
+ro.vendor.mediatek.platform=MT6785
+ro.crypto.volume.filenames_mode=aes-256-cts
+##
