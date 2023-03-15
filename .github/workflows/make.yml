@@ -1,41 +1,20 @@
-name: Recovery Build Organizations
+name: Recovery Build
 
 on:
   workflow_dispatch:
     inputs:
       MANIFEST_URL:
-        description: 'MANIFEST_URL (if using SSH keys, use git@github.com:repo URL format)'
+        description: 'MANIFEST_URL (if want to use SSH keys, use git@github.com:XXXXX)'
         required: true
-        default: ''
-        type: choice
-        options:
-        - https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git
-        - https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git
-        - https://github.com/PitchBlackRecoveryProject/manifest_pb.git
-        - https://gitlab.com/OrangeFox/bootable/Recovery.git
-        - https://github.com/SHRP/manifest.git
+        default: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp'
       MANIFEST_BRANCH:
         description: 'MANIFEST_BRANCH'
         required: true
-        default: ''
-        type: choice
-        options:
-        - twrp-12.1
-        - twrp-11
-        - twrp-10.0-deprecated
-        - android-12.1
-        - android-11.0
-        - android-10.0
-        - fox_12.1
-        - fox_11.0
-        - fox_10.0
-        - shrp-12.1
-        - v3_11.0
-        - v3_10.0
+        default: 'twrp-12.1'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/fornicisbeetle/Android_device_doogee_s96gt2/tree/android-12.1'
+        default: 'https://github.com/fornicisbeetle/Android_device_doogee_s96gt2'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
@@ -55,27 +34,20 @@ on:
         required: true
         default: 'S96Pro'
       MAKEFILE_NAME:
-        description: 'MAKEFILE_NAME (you need to know the correct branch to use coming from each Organization)'
+        description: 'MAKEFILE_NAME'
         required: true
-        default: 'twrp'
-        type: choice
-        options:
-        - twrp
-        - omni
+        default: 'twrp_S96Pro'
       BUILD_TARGET:
         description: 'BUILD_TARGET'
         required: true
-        default: ''
-        type: choice
-        options:
-        - boot
-        - recovery
-        - vendor_boot
+        default: 'recovery'
+
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
-    runs-on: ubuntu-18.04
-    # You can use either of the ubuntu-18.04 or ubuntu-20.04 runner
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
     steps:
     - name: Display Run Parameters
       run: |
@@ -102,7 +74,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt -y upgrade
-        sudo apt -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev python
+        sudo apt -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-gtk3-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev libncurses5 python
     - name: Install OpenJDK
       uses: actions/setup-java@v3
       with:
@@ -128,7 +100,7 @@ jobs:
         cd workspace
         echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
         git config --global user.name "fornicisbeetle"
-        git config --global user.email "fornicisbeetle@yandex.ru"
+        git config --global user.email "fornicisbeetle@yndex.ru"
         repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
       id: pwd
           
@@ -174,13 +146,13 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
+        files: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
