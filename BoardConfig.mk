@@ -194,7 +194,7 @@ TW_DEFAULT_BRIGHTNESS := 150
 TW_DEVICE_VERSION := S96GT by lopestom & kass666(4PDA)
 
 # Resolution
-TW_THEME := portrait_hdpi
+#TW_THEME := portrait_hdpi
 
 # Debug
 TWRP_INCLUDE_LOGCAT := true
