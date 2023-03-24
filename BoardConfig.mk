@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2023 The Android Open Source Project
 # Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
 #
@@ -98,7 +97,6 @@ BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
 # Hack: prevent anti rollback
 PLATFORM_SECURITY_PATCH := 2099-12-31
-
 PLATFORM_VERSION := 16.1.0
 
 # TWRP Configuration
@@ -107,3 +105,5 @@ TW_EXTRA_LANGUAGES := true
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_USE_TOOLBOX := true
+
+TW_DEVICE_VERSION := S96GT by lopestom & kass666(4PDA)
