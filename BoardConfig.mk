@@ -199,8 +199,6 @@ TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 150
 
-TW_DEVICE_VERSION := Doogee S96GT by kass666
-
 # Resolution
 TW_THEME := portrait_hdpi
 DEVICE_SCREEN_WIDTH := 720
@@ -218,4 +216,4 @@ TW_INCLUDE_PYTHON := false
 # resetprop and magiskboot
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_REPACKTOOLS := true
-TW_DEVICE_VERSION := S96GT by lopestom & kass666 & walkman2021
+TW_DEVICE_VERSION := S96GT by lopestom & kass666 & walkman2021 (4PDA)
